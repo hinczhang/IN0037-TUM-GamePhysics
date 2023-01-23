@@ -112,6 +112,8 @@ private:
 	int m_collisionObjMass1 = 2;
 	int m_collisionObjMass2 = 2;
 
+	vector<Vec3> tracks;
+
 	// UI Attributes
 	Point2D m_mouse;
 	Point2D m_trackmouse;
@@ -127,5 +129,7 @@ private:
 	void do_collisions();
 	Mat4 obj2World(const RigidBody& body);
 	void collide(RigidBody& b1, RigidBody& b2, const CollisionInfo& info);
+	void drawTracks();
+	
 };
 

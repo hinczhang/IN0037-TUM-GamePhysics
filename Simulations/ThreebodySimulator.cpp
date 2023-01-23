@@ -1,7 +1,7 @@
 #include "ThreebodySimulator.h"
 
 #define PI 3.141592653589
-#define G 1.5
+#define G 2.5
 
 ThreebodySimulator::ThreebodySimulator() {
 
@@ -66,6 +66,7 @@ void ThreebodySimulator::drawRigidBodies() {
 
 void ThreebodySimulator::drawFrame(ID3D11DeviceContext* pd3dImmediateContext) {
     drawRigidBodies();
+    drawTracks();
 }
 
 void ThreebodySimulator::notifyCaseChanged(int testCase) {
@@ -129,14 +130,14 @@ void ThreebodySimulator::notifyCaseChanged(int testCase) {
     } break;
     case 4: {
         std::cout << "Demo 5 (Two stars system)\n";
-		int b1 = addRigidBody(Vec3(0, 0, 2), Vec3(0.0001, 0.0001, 0.0001), 1);
-        setVelocityOf(b1, Vec3(1, 0, 1));
-		int b2 = addRigidBody(Vec3(2, 0, 0), Vec3(0.0001, 0.0001, 0.0001), 1);
+		int b1 = addRigidBody(Vec3(0, 0, 2), Vec3(0.0001, 0.0001, 0.0001), 5);
+        setVelocityOf(b1, Vec3(1, 0, -1));
+		int b2 = addRigidBody(Vec3(2, 0, 0), Vec3(0.0001, 0.0001, 0.0001), 5);
         setVelocityOf(b2, Vec3(-1, 1, 0));
-        int b3 = addRigidBody(Vec3(0, 2, 0), Vec3(0.0001, 0.0001, 0.0001), 1);
-        setVelocityOf(b3, Vec3(0, 1, 1));
-        int b4 = addRigidBody(Vec3(0, 0, 0), Vec3(0.0001, 0.0001, 0.0001), 5);
-        setFixedOf(b4, true);
+        int b3 = addRigidBody(Vec3(0, 2, 0), Vec3(0.0001, 0.0001, 0.0001), 5);
+        setVelocityOf(b3, Vec3(0, -1, 1));
+        int b4 = addRigidBody(Vec3(0, 0, 0), Vec3(0.0001, 0.0001, 0.0001), 1);
+        //setFixedOf(b4, true);
     }
     default:
         break;
@@ -294,6 +295,14 @@ void ThreebodySimulator::collide(RigidBody& b1, RigidBody& b2, const CollisionIn
 
 }
 
+void ThreebodySimulator::drawTracks()
+{
+    for (auto& p: tracks) {
+        DUC->setUpLighting(Vec3(2, 1, 2), 0.4 * Vec3(1, 1, 1), 2000.0, Vec3(0.5, 0.5, 0.5));
+        DUC->drawSphere(p, 0.005);
+    }
+}
+
 void ThreebodySimulator::do_collisions() {
 
     if (m_bodies.size() <= 1) {
@@ -325,9 +334,12 @@ void ThreebodySimulator::simulateTimestep(float timeStep) {
     // do rotation stuff
     angularCalculations(timeStep);
     if (m_iTestCase == 4) {
+        if (tracks.size() > 100 * m_bodies.size()) {
+            tracks.erase(tracks.begin(), tracks.begin() +  m_bodies.size());
+        }
+        
         for (auto& b : m_bodies) {
-            DUC->setUpLighting(Vec3(0, 0, 0), 0.4 * Vec3(1, 1, 1), 2000.0, Vec3(0.5, 0.5, 0.5));
-		    DUC->drawSphere(b.position+2, 0.01);
+			tracks.push_back(b.position);
 	    }
     }
     
