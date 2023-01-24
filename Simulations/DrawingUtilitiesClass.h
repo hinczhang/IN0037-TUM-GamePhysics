@@ -70,6 +70,7 @@ void init(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext)
 	// Create DirectXTK geometric primitives for later usage
     g_pSphere = GeometricPrimitive::CreateGeoSphere(g_pd3dImmediateContext, 2.0f, 2, false);
     g_pTeapot = GeometricPrimitive::CreateTeapot(g_pd3dImmediateContext, 1.5f, 8, false);
+    
 
     // Create effect, input layout and primitive batch for position/color vertices (DirectXTK)
     {

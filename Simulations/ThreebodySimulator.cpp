@@ -1,14 +1,14 @@
 #include "ThreebodySimulator.h"
 
 #define PI 3.141592653589
-#define G 2.5
+#define G sqrt(2)
 
 ThreebodySimulator::ThreebodySimulator() {
 
 }
 
 const char* ThreebodySimulator::getTestCasesStr() {
-    return "Demo 1 (one-step), Demo 2 (single body), Demo 3 (two-body collision), Demo 4 (Complex), Demo 5 (Two stars)";
+    return "Demo 1 (one-step), Demo 2 (single body), Demo 3 (two-body collision), Demo 4 (Three body: stable solution), Demo 5 (Three body: non-stable solution)";
 }
 void ThreebodySimulator::initUI(DrawingUtilitiesClass* DUC) {
     this->DUC = DUC;
@@ -60,7 +60,7 @@ void ThreebodySimulator::drawRigidBodies() {
             DUC->setUpLighting(Vec3(0, 0, 0), 0.4 * Vec3(1, 1, 1), 2000.0, Vec3(0.5, 0.5, 0.5));
         }
         //DUC->drawRigidBody(obj2World(m_bodies[i]));
-		DUC->drawSphere(m_bodies[i].position, 0.05);
+		DUC->drawSphere(m_bodies[i].position, m_bodies[i].size);
     }
 }
 
@@ -111,32 +111,32 @@ void ThreebodySimulator::notifyCaseChanged(int testCase) {
         setVelocityOf(b2, Vec3(-m_collisionObjSpeed2, 0, 0));
     }break;
     case 3: {
-        std::cout << "Demo 4 (Complex)\n";
+        std::cout << "Demo 4 (Three body: stable solution)\n";
 
         std::cout << "INSTRUCTIONS:\n" <<
             "1. Hold the left mouse button and drag to apply a force on the green object.\n\n";
 
         bounciness = 0.3;
 
-        int b1 = addRigidBody(Vec3(-0.3, 0, 0), Vec3(0.25, 0.25, 0.25), 2);
-        setOrientationOf(b1, Quat(0, M_PI / 4, M_PI / 4));
-
-        int b2 = addRigidBody(Vec3(0.3, 0.26, 0), Vec3(0.25, 0.25, 0.25), 2);
-        int b3 = addRigidBody(Vec3(0.3, 0, 0), Vec3(0.25, 0.25, 0.25), 2e8);
-        int b4 = addRigidBody(Vec3(0.6, +0.13, 0), Vec3(0.25, 0.25, 0.25), 2);
-        int b5 = addRigidBody(Vec3(0.6, -0.13, 0), Vec3(0.25, 0.25, 0.25), 2);
-        int b6 = addRigidBody(Vec3(0.3, -0.26, 0), Vec3(0.25, 0.25, 0.25), 2);
+        int b1 = addRigidBody(Vec3(0, 0, 1), Vec3(0.05, 0.05, 0.05), 4);
+        setVelocityOf(b1, Vec3(-1, 1, 0) * sqrt(2));
+        int b2 = addRigidBody(Vec3(1, 0, 0), Vec3(0.05, 0.05, 0.05), 4);
+        setVelocityOf(b2, Vec3(0, -1, 1) * sqrt(2));
+        int b3 = addRigidBody(Vec3(0, 1, 0), Vec3(0.05, 0.05, 0.05), 4);
+        setVelocityOf(b3, Vec3(1, 0, -1) * sqrt(2));
 
     } break;
     case 4: {
-        std::cout << "Demo 5 (Two stars system)\n";
-		int b1 = addRigidBody(Vec3(0, 0, 2), Vec3(0.0001, 0.0001, 0.0001), 5);
-        setVelocityOf(b1, Vec3(1, 0, -1));
-		int b2 = addRigidBody(Vec3(2, 0, 0), Vec3(0.0001, 0.0001, 0.0001), 5);
-        setVelocityOf(b2, Vec3(-1, 1, 0));
-        int b3 = addRigidBody(Vec3(0, 2, 0), Vec3(0.0001, 0.0001, 0.0001), 5);
-        setVelocityOf(b3, Vec3(0, -1, 1));
-        int b4 = addRigidBody(Vec3(0, 0, 0), Vec3(0.0001, 0.0001, 0.0001), 1);
+        std::cout << "Demo 5 (Three body: non-stable solution)\n";
+		int b1 = addRigidBody(Vec3(0, 0, 1), Vec3(0.05, 0.05, 0.05), 128);
+        setVelocityOf(b1, Vec3(-1, 1, 0) * 8);
+		int b2 = addRigidBody(Vec3(1, 0, 0), Vec3(0.05, 0.05, 0.05), 128);
+        setVelocityOf(b2, Vec3(0, -1, 1) * 8);
+        int b3 = addRigidBody(Vec3(0, 1, 0), Vec3(0.05, 0.05, 0.05), 128);
+        setVelocityOf(b3, Vec3(1, 0, -1) * 8);
+		int b4 = addRigidBody(Vec3(0, 0, 0), Vec3(0.01, 0.01, 0.01), 1);
+		setVelocityOf(b4, Vec3(-0.01, -0.01, 0.01));
+        // int b4 = addRigidBody(Vec3(0, 0, 0), Vec3(0.0001, 0.0001, 0.0001), 1);
         //setFixedOf(b4, true);
     }
     default:
@@ -297,9 +297,14 @@ void ThreebodySimulator::collide(RigidBody& b1, RigidBody& b2, const CollisionIn
 
 void ThreebodySimulator::drawTracks()
 {
+    int index = 0;
+	double deltaRadius = 0.01 / double(int(tracks.size()));
     for (auto& p: tracks) {
-        DUC->setUpLighting(Vec3(2, 1, 2), 0.4 * Vec3(1, 1, 1), 2000.0, Vec3(0.5, 0.5, 0.5));
-        DUC->drawSphere(p, 0.005);
+        DUC->setUpLighting(Vec3(0.2, 0.1, 0.5), 0.4 * Vec3(1, 1, 1), 2000.0, Vec3(0.5, 0.5, 0.5));
+        double radius = deltaRadius * double(index);
+        Vec3 normDirection = p.linear_vel/norm(p.linear_vel);
+		DUC->drawSphere(p.position - 0.05*normDirection, radius);
+		index++;
     }
 }
 
@@ -312,7 +317,6 @@ void ThreebodySimulator::do_collisions() {
     for (int i = 0; i < m_bodies.size() - 1; ++i) {
         for (int j = i + 1; j < m_bodies.size(); ++j) {
             CollisionInfo info = checkCollisionSAT(obj2World(m_bodies[i]), obj2World(m_bodies[j]));
-
             if (info.isValid) {
                 // found collision
                 collide(m_bodies[i], m_bodies[j], info);
@@ -333,15 +337,15 @@ void ThreebodySimulator::simulateTimestep(float timeStep) {
 
     // do rotation stuff
     angularCalculations(timeStep);
-    if (m_iTestCase == 4) {
-        if (tracks.size() > 100 * m_bodies.size()) {
+
+        if (tracks.size() > 150 * m_bodies.size()) {
             tracks.erase(tracks.begin(), tracks.begin() +  m_bodies.size());
         }
         
-        for (auto& b : m_bodies) {
-			tracks.push_back(b.position);
+        for (auto b : m_bodies) {
+			tracks.push_back(b);
 	    }
-    }
+    
     
 
     // check collisions

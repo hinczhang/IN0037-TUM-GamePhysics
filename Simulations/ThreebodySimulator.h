@@ -112,7 +112,7 @@ private:
 	int m_collisionObjMass1 = 2;
 	int m_collisionObjMass2 = 2;
 
-	vector<Vec3> tracks;
+	vector<RigidBody> tracks;
 
 	// UI Attributes
 	Point2D m_mouse;
