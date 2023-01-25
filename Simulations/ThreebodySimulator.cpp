@@ -1,7 +1,7 @@
 #include "ThreebodySimulator.h"
 
 #define PI 3.141592653589
-#define G sqrt(2)
+#define G sqrt(2)/64
 
 ThreebodySimulator::ThreebodySimulator() {
 
@@ -129,13 +129,13 @@ void ThreebodySimulator::notifyCaseChanged(int testCase) {
     case 4: {
         std::cout << "Demo 5 (Three body: non-stable solution)\n";
 		int b1 = addRigidBody(Vec3(0, 0, 1), Vec3(0.05, 0.05, 0.05), 128);
-        setVelocityOf(b1, Vec3(-1, 1, 0) * 8);
+        setVelocityOf(b1, Vec3(-1, 1, 0) * 1);
 		int b2 = addRigidBody(Vec3(1, 0, 0), Vec3(0.05, 0.05, 0.05), 128);
-        setVelocityOf(b2, Vec3(0, -1, 1) * 8);
+        setVelocityOf(b2, Vec3(0, -1, 1) * 1);
         int b3 = addRigidBody(Vec3(0, 1, 0), Vec3(0.05, 0.05, 0.05), 128);
-        setVelocityOf(b3, Vec3(1, 0, -1) * 8);
-		int b4 = addRigidBody(Vec3(0, 0, 0), Vec3(0.01, 0.01, 0.01), 1);
-		setVelocityOf(b4, Vec3(-0.01, -0.01, 0.01));
+        setVelocityOf(b3, Vec3(1, 0, -1) * 1);
+		int b4 = addRigidBody(Vec3(1, 1, 1), Vec3(0.01, 0.01, 0.01), 1);
+		setVelocityOf(b4, Vec3(-0.003, -0.005, 0.01));
         // int b4 = addRigidBody(Vec3(0, 0, 0), Vec3(0.0001, 0.0001, 0.0001), 1);
         //setFixedOf(b4, true);
     }
