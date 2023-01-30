@@ -97,16 +97,16 @@ void ThreebodySimulator::notifyCaseChanged(int testCase) {
         std::cout << "INSTRUCTIONS:\n" <<
             "1. Use the slider in the UI to change the location where the external force will be applied.\n" <<
             "2. Click and drag with the left mouse button to apply the force.\n\n";
-        int b1 = addRigidBody(Vec3(0, 0, 0), Vec3(1, 0.6, 0.5), 2);
+        int b1 = addRigidBody(Vec3(0, 0, 0), Vec3(0.05, 0.05, 0.05), 2);
         setOrientationOf(b1, Quat(0, 0, M_PI / 2));
     }break;
     case 2: {
         std::cout << "Demo 3 (Two body collision)\n" << std::endl;
-        int b1 = addRigidBody(Vec3(0, 0, 0), Vec3(1, 0.5, 0.5), 2e9);
+        int b1 = addRigidBody(Vec3(0, 0, 0), Vec3(0.05, 0.05, 0.05), 32);
         setOrientationOf(b1, Quat(0, -M_PI / 4, M_PI / 4));
         setVelocityOf(b1, Vec3(m_collisionObjSpeed1, 0, 0));
 
-        int b2 = addRigidBody(Vec3(2, 0, 0), Vec3(0.5, 1, 0.5), 2e9);
+        int b2 = addRigidBody(Vec3(2, 0, 0), Vec3(0.05, 0.05, 0.05), 32);
         setOrientationOf(b2, Quat(0, 0, M_PI / 2));
         setVelocityOf(b2, Vec3(-m_collisionObjSpeed2, 0, 0));
     }break;
@@ -118,27 +118,27 @@ void ThreebodySimulator::notifyCaseChanged(int testCase) {
 
         bounciness = 0.3;
 
-        int b1 = addRigidBody(Vec3(0, 0, 1), Vec3(0.05, 0.05, 0.05), 4);
-        setVelocityOf(b1, Vec3(-1, 1, 0) * sqrt(2));
-        int b2 = addRigidBody(Vec3(1, 0, 0), Vec3(0.05, 0.05, 0.05), 4);
-        setVelocityOf(b2, Vec3(0, -1, 1) * sqrt(2));
-        int b3 = addRigidBody(Vec3(0, 1, 0), Vec3(0.05, 0.05, 0.05), 4);
-        setVelocityOf(b3, Vec3(1, 0, -1) * sqrt(2));
+        int b1 = addRigidBody(Vec3(0, 0, 1), Vec3(0.05, 0.05, 0.05), 128);
+        setVelocityOf(b1, Vec3(-1, 1, 0) * 1);
+        int b2 = addRigidBody(Vec3(1, 0, 0), Vec3(0.05, 0.05, 0.05), 128);
+        setVelocityOf(b2, Vec3(0, -1, 1) * 1);
+        int b3 = addRigidBody(Vec3(0, 1, 0), Vec3(0.05, 0.05, 0.05), 128);
+        setVelocityOf(b3, Vec3(1, 0, -1) * 1);
 
     } break;
     case 4: {
         std::cout << "Demo 5 (Three body: non-stable solution)\n";
-		int b1 = addRigidBody(Vec3(0, 0, 1), Vec3(0.05, 0.05, 0.05), 128);
+        int b1 = addRigidBody(Vec3(0, 0, 1), Vec3(0.05, 0.05, 0.05), 128);
         setVelocityOf(b1, Vec3(-1, 1, 0) * 1);
-		int b2 = addRigidBody(Vec3(1, 0, 0), Vec3(0.05, 0.05, 0.05), 128);
+        int b2 = addRigidBody(Vec3(1, 0, 0), Vec3(0.05, 0.05, 0.05), 128);
         setVelocityOf(b2, Vec3(0, -1, 1) * 1);
         int b3 = addRigidBody(Vec3(0, 1, 0), Vec3(0.05, 0.05, 0.05), 128);
         setVelocityOf(b3, Vec3(1, 0, -1) * 1);
-		int b4 = addRigidBody(Vec3(1, 1, 1), Vec3(0.01, 0.01, 0.01), 1);
-		setVelocityOf(b4, Vec3(-0.003, -0.005, 0.01));
+        int b4 = addRigidBody(Vec3(1, 1, 1), Vec3(0.01, 0.01, 0.01), 1);
+        setVelocityOf(b4, Vec3(-0.003, -0.005, 0.01));
         // int b4 = addRigidBody(Vec3(0, 0, 0), Vec3(0.0001, 0.0001, 0.0001), 1);
         //setFixedOf(b4, true);
-    }
+    } break;
     default:
         break;
     }
